@@ -50,9 +50,9 @@ namespace Fractals
                     //Поиск индексов байтов какого-либо пикселя bitmap
                     int pixelOffset = (x + y * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
 
-                    pixels[pixelOffset] = (byte)255; //blue
-                    pixels[pixelOffset + 1] = (byte)255; //green
-                    pixels[pixelOffset + 2] = (byte)255; //red
+                    pixels[pixelOffset] = (byte)0; //blue
+                    pixels[pixelOffset + 1] = (byte)0; //green
+                    pixels[pixelOffset + 2] = (byte)0; //red
                     //pixels[pixelOffset + 3 - alpha
 
                     int iterations = 0;
@@ -62,9 +62,9 @@ namespace Fractals
                         z = Complex.Pow(z, complexPower) + c; // z = z ^ complexPower + c
                         if (z.Magnitude > 2.0d)
                         {
-                            pixels[pixelOffset] = (byte)iterations;
-                            pixels[pixelOffset + 1] = (byte)iterations;
-                            pixels[pixelOffset + 2] = (byte)iterations;
+                            pixels[pixelOffset] = (byte)(System.Math.Abs(255 - iterations * 8));
+                            pixels[pixelOffset + 1] = (byte)(System.Math.Abs(255 - iterations * 14));
+                            pixels[pixelOffset + 2] = (byte)(System.Math.Abs(255 - iterations * 12));
                             break;
                         }
                     } while (iterations < 100);
