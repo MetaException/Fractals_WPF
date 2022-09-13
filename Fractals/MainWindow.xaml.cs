@@ -15,14 +15,30 @@ namespace Fractals
             InitializeComponent();
         }
 
+        private double complexPower = 2;
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Draw();
         }
 
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Right)
+            {
+                complexPower += 0.05;
+                Draw();
+            }
+            if (e.Key == System.Windows.Input.Key.Left)
+            {
+                complexPower -= 0.05;
+                Draw();
+            }
+        }
+
         private void Draw()
         {
-            int complexPower = 2; // Степень, в которую возводится комплексное число
+            //int complexPower = 2; // Степень, в которую возводится комплексное число
 
             // Создаётся битмап размером с окно (экран)
             WriteableBitmap wb = new WriteableBitmap((int)Width,
