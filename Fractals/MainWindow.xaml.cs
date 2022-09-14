@@ -30,7 +30,7 @@ namespace Fractals
             rect = new Int32Rect(0, 0, (int)Width, (int)Height);
 
             //Массив байтов буффера изображения(bitmap)
-            pixels = new byte[(int)Width * wb.BackBufferStride];
+            pixels = new byte[wb.BackBufferStride * wb.BackBufferStride];
 
             Draw();
         }
@@ -40,11 +40,13 @@ namespace Fractals
             if (e.Key == System.Windows.Input.Key.Right)
             {
                 complexPower += 0.05;
+                System.Array.Clear(pixels, 0, pixels.Length);
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Left)
             {
                 complexPower -= 0.05;
+                System.Array.Clear(pixels, 0, pixels.Length);
                 Draw();
             }
         }
