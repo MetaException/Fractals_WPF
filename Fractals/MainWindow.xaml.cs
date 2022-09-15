@@ -30,7 +30,7 @@ namespace Fractals
             rect = new Int32Rect(0, 0, (int)Width, (int)Height);
 
             //Массив байтов буффера изображения(bitmap)
-            pixels = new byte[wb.BackBufferStride * wb.BackBufferStride];
+            pixels = new byte[(int)Width * (int)Height * wb.Format.BitsPerPixel / 8];
 
             Draw();
         }
@@ -71,7 +71,15 @@ namespace Fractals
                     {
                         iterations++;
                         z = Complex.Pow(z, complexPower) + c; // z = z ^ complexPower + c
-                        if (z.Magnitude > 2.0d)
+
+                        double P = System.Math.Sqrt(System.Math.Pow(z.Real - 1d / 4d, 2d) + z.Imaginary * z.Imaginary);
+                        double O = System.Math.Atan2(z.Imaginary, z.Real - 1d / 4d);
+                        double Pc = 1d / 2d - 1d / 2d * System.Math.Cos(O);
+
+                        if (iterations < 2.0d && (P <= Pc && complexPower == 2))
+                            break;
+
+                        if (z.Magnitude > 2d)
                         {
                             //Поиск индексов байтов какого-либо пикселя bitmap
                             int pixelOffset = (x + y * wb.PixelWidth) * wb.Format.BitsPerPixel / 8;
@@ -83,7 +91,7 @@ namespace Fractals
                     } while (iterations < 100);
                 }
             }
-            wb.WritePixels(rect, pixels, wb.BackBufferStride, 0);
+            wb.FromByteArray(pixels);
             img.Source = wb;
         }
     }
