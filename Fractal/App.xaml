@@ -1,7 +1,7 @@
-﻿<Application x:Class="Fractals.App"
+﻿<Application x:Class="Fractal.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Fractals"
+             xmlns:local="clr-namespace:Fractal"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
