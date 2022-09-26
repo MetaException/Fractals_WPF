@@ -1,8 +1,15 @@
-﻿using ComputeSharp;
+﻿using CommunityToolkit.Diagnostics;
+using ComputeSharp;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Memory;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TerraFX.Interop.Windows;
+using ImageSharpBgra32 = SixLabors.ImageSharp.PixelFormats.Bgra32;
 
 namespace Fractal
 {
@@ -30,10 +37,15 @@ namespace Fractal
             // Run our shader on the texture we just loaded
             GraphicsDevice.GetDefault().For(texture.Width, texture.Height, new DrawMandelbrotSet(texture));
 
-            // Save the processed image by overwriting the original image
-            texture.Save("D:\\myImage.jpg");
+            Memory<ImageSharpBgra32> pixelMemory = new Memory<ImageSharpBgra32>(new ImageSharpBgra32[(int)Width * (int)Height * PixelFormats.Bgra32.BitsPerPixel / 8]);
+            Span<Bgra32> span = MemoryMarshal.Cast<ImageSharpBgra32, Bgra32>(pixelMemory.Span);
+            texture.CopyTo(span);
 
-            img.Source = new BitmapImage(new Uri("D:\\myImage.jpg")); //Переделать
+            //Оптимизировать
+            byte[] PixelData = MemoryMarshal.AsBytes(span).ToArray();
+            WriteableBitmap wb = new WriteableBitmap((int)Width, (int)Height, 96, 96,  PixelFormats.Bgr32, null);
+            wb.WritePixels(new Int32Rect(0,0,(int)Width, (int)Height), PixelData, (wb.PixelWidth * wb.Format.BitsPerPixel) / 8, 0);
+            img.Source = wb;
         }
     }
 }

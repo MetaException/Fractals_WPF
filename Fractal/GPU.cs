@@ -26,12 +26,14 @@ public readonly partial struct DrawMandelbrotSet : IComputeShader
 
             if (z_real2 * z_real2 + z_imaginary2 * z_imaginary2 >= 4.0f)
             {
-                texture[ThreadIds.XY].RGB = 0 + (float)iterations / 64f;
+                texture[ThreadIds.XY].R = 0f + (float)iterations / 100 * 1.5f;
+                texture[ThreadIds.XY].G = 0f + (float)iterations / 100 * 2f;
+                texture[ThreadIds.XY].B = 0f + (float)iterations / 100 * 4f;
                 break;
             }
             if (iterations < 2)
             {
-                float P = Hlsl.Sqrt(Hlsl.Pow(z_real2 - 1f / 4f, 2f) + z_imaginary2 * z_imaginary2);
+                float P = Hlsl.Sqrt(Hlsl.Pow(z_real2 - 1f / 4f, 2) + z_imaginary2 * z_imaginary2);
                 float O = Hlsl.Atan2(z_imaginary2, z_real2 - 1f / 4f);
                 float Pc = 1f / 2f - 1f / 2f * Hlsl.Cos(O);
                 if (P <= Pc)
@@ -39,6 +41,6 @@ public readonly partial struct DrawMandelbrotSet : IComputeShader
             }
             z_real = z_real2;
             z_imaginary = z_imaginary2;
-        } while (iterations < 100);
+        } while (iterations < 1000);
     }
 }
