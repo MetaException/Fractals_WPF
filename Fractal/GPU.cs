@@ -4,16 +4,26 @@
 public readonly partial struct DrawMandelbrotSet : IComputeShader
 {
     public readonly IReadWriteNormalizedTexture2D<float4> texture;
+    public readonly float x1, x2, y1, y2;
 
     public void Execute()
     {
+        //Цена деления = (x2 - x1) / texture.Width
+        //Нужное число = x1 + (индекс * цена деления)
+        //0..1, 5
+        //Цд = (1 - 0)/5 = 0.2
+        //N = 0 + (3 * 0.2) = 0.6
+
         //a = x / масштаб * 1.777f(константа 16:9 для правильной отрисовки)
-        float c_real = (float)(ThreadIds.X - (texture.Width / 2.0f)) / (float)(texture.Width / 4.0f) * 1.777f;
+        //float c_real = (float)(ThreadIds.X - (texture.Width / zoom / 2.0f)) / (float)(texture.Width / zoom / 4.0f) * 1.777f; //Добавить смещение при увеличении
+
+        float c_real = x1 + (ThreadIds.X * ((x2 - x1) / texture.Width)) * 1.777f;
 
         //a = y / масштаб
-        float c_imaginary = (float)(ThreadIds.Y - (texture.Height / 2.0f)) / (float)(texture.Height / 4.0f);
+        //float c_imaginary = (float)(ThreadIds.Y - (texture.Height / zoom / 2.0f)) / (float)(texture.Height / zoom / 4.0f);
+        float c_imaginary = y1 + (ThreadIds.Y * ((y2 - y1) / texture.Height));
 
-        float z_real = 0.0f; 
+        float z_real = 0.0f;
         float z_imaginary = 0.0f;
 
         int iterations = 0;

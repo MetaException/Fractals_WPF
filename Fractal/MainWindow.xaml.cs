@@ -20,6 +20,8 @@ namespace Fractal
             InitializeComponent();
         }
 
+        public float x1 = -3.5f, x2 = 0.5f, y1 = -2f, y2 = 2f;
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Draw();
@@ -27,7 +29,6 @@ namespace Fractal
 
         private void Draw()
         {
-
             Memory<ImageSharpBgra32> pixelMemory = new Memory<ImageSharpBgra32>(new ImageSharpBgra32[(int)Width * (int)Height * PixelFormats.Bgra32.BitsPerPixel / 8]);
             Span<Bgra32> span = MemoryMarshal.Cast<ImageSharpBgra32, Bgra32>(pixelMemory.Span);
 
@@ -35,7 +36,7 @@ namespace Fractal
             using ReadWriteTexture2D<Bgra32, float4> texture = GraphicsDevice.GetDefault().AllocateReadWriteTexture2D<Bgra32, float4>(span, (int)Width, (int)Height);
 
             // Run our shader on the texture we just loaded
-            GraphicsDevice.GetDefault().For(texture.Width, texture.Height, new DrawMandelbrotSet(texture));
+            GraphicsDevice.GetDefault().For(texture.Width, texture.Height, new DrawMandelbrotSet(texture, x1, x2, y1, y2));
             texture.CopyTo(span);
 
             //Оптимизировать
