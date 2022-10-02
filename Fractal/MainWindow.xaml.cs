@@ -91,11 +91,8 @@ namespace Fractal
             GraphicsDevice.GetDefault().For(texture.Width, texture.Height, new DrawMandelbrotSet(texture, x1, x2, y1, y2));
             texture.CopyTo(span);
 
-            //Оптимизировать
-            byte[] PixelData = MemoryMarshal.AsBytes(span).ToArray();
-            WriteableBitmap wb = new WriteableBitmap((int)Width, (int)Height, 96, 96, PixelFormats.Bgr32, null);
-            wb.WritePixels(new Int32Rect(0, 0, (int)Width, (int)Height), PixelData, (wb.PixelWidth * wb.Format.BitsPerPixel) / 8, 0);
-            img.Source = wb;
+            byte[] pixelData = MemoryMarshal.AsBytes(span).ToArray();
+            img.Source = new WriteableBitmap((int)Width, (int)Height, 96, 96, PixelFormats.Bgr32, null).FromByteArray(pixelData);
         }
     }
 }
