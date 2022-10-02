@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Fractal"
         mc:Ignorable="d"
         WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None"
-        Loaded="MainWindow_Loaded">
+        Loaded="MainWindow_Loaded"
+        KeyDown="Window_KeyDown">
     <Image x:Name="img"/>
 </Window>

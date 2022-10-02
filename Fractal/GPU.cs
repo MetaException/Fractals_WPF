@@ -8,21 +8,9 @@ public readonly partial struct DrawMandelbrotSet : IComputeShader
 
     public void Execute()
     {
-        //Цена деления = (x2 - x1) / texture.Width
-        //Нужное число = x1 + (индекс * цена деления)
-        //0..1, 5
-        //Цд = (1 - 0)/5 = 0.2
-        //N = 0 + (3 * 0.2) = 0.6
-
-        //a = x / масштаб * 1.777f(константа 16:9 для правильной отрисовки)
-        //float c_real = (float)(ThreadIds.X - (texture.Width / zoom / 2.0f)) / (float)(texture.Width / zoom / 4.0f) * 1.777f; //Добавить смещение при увеличении
-
         float c_real = x1 + (ThreadIds.X * ((x2 - x1) / texture.Width)) * 1.777f;
-
-        //a = y / масштаб
-        //float c_imaginary = (float)(ThreadIds.Y - (texture.Height / zoom / 2.0f)) / (float)(texture.Height / zoom / 4.0f);
         float c_imaginary = y1 + (ThreadIds.Y * ((y2 - y1) / texture.Height));
-
+        
         float z_real = 0.0f;
         float z_imaginary = 0.0f;
 
@@ -32,13 +20,13 @@ public readonly partial struct DrawMandelbrotSet : IComputeShader
             iterations++;
             float z_real2 = (z_real * z_real) - (z_imaginary * z_imaginary) + c_real;
             float z_imaginary2 = (z_real * z_imaginary * 2) + c_imaginary;
-            //z = z * z + c; // z = z ^ complexPower + c
+            //z = z * z + c;
 
-            if (z_real2 * z_real2 + z_imaginary2 * z_imaginary2 >= 4.0f)
+            if (z_real2 * z_real2 + z_imaginary2 * z_imaginary2 > 4.0f)
             {
-                texture[ThreadIds.XY].R = 0f + (float)iterations / 100 * 1.5f;
-                texture[ThreadIds.XY].G = 0f + (float)iterations / 100 * 2f;
-                texture[ThreadIds.XY].B = 0f + (float)iterations / 100 * 4f;
+                texture[ThreadIds.XY].R = 0f + (float)iterations / 1000 * 1.5f;
+                texture[ThreadIds.XY].G = 0f + (float)iterations / 1000 * 2f;
+                texture[ThreadIds.XY].B = 0f + (float)iterations / 1000 * 4f;
                 break;
             }
             if (iterations < 2)
@@ -51,6 +39,6 @@ public readonly partial struct DrawMandelbrotSet : IComputeShader
             }
             z_real = z_real2;
             z_imaginary = z_imaginary2;
-        } while (iterations < 1000);
+        } while (iterations < 10000);
     }
 }
