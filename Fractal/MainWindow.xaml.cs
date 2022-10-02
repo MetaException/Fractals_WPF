@@ -57,6 +57,26 @@ namespace Fractal
                 y1 += dy * 5f;
                 Draw();
             }
+            if (e.Key == System.Windows.Input.Key.E)
+            {
+                float dx = (x2 - x1) / (float)Width * 1.777f; 
+                float dy = (y2 - y1) / (float)Height;
+                x1 += dx * 5f;
+                y1 += dy * 5f;
+                x2 -= dx * 5f;
+                y2 -= dy * 5f;
+                Draw();
+            }
+            if (e.Key == System.Windows.Input.Key.Q)
+            {
+                float dx = (x2 - x1) / (float)Width * 1.777f;
+                float dy = (y2 - y1) / (float)Height;
+                x1 -= dx * 5f;
+                y1 -= dy * 5f;
+                x2 += dx * 5f;
+                y2 += dy * 5f;
+                Draw();
+            }
         }
 
         private void Draw()
