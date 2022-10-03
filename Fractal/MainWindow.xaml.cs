@@ -19,11 +19,15 @@ namespace Fractal
             InitializeComponent();
         }
 
-        public float x1 = -0.5555998601048486f, x2 = -0.5418662845040672f, y1 = -0.49153696023859084f, y2 = -0.5052705358393723f;
-        //public float x1 = -3.5f, x2 = 0.5f, y1 = -2f, y2 = 2f;
+        //public float x1 = -0.5555998601048486f, x2 = -0.5418662845040672f, y1 = -0.49153696023859084f, y2 = -0.5052705358393723f;
+        public float x1 = -3.5f, x2 = 0.5f, y1 = -2f, y2 = 2f;
+        public int maxIterations = 10000;
+
+        private WriteableBitmap _wb;
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            _wb = new WriteableBitmap((int)Width, (int)Height, 96, 96, PixelFormats.Bgr32, null);
             Draw();
         }
 
@@ -31,14 +35,14 @@ namespace Fractal
         {
             if (e.Key == System.Windows.Input.Key.Left)
             {
-                float dx = (x2 - x1) / (float)Width;
+                float dx = (x2 - x1) / (float)Width * 1.777f;
                 x2 -= dx * 5f;
                 x1 -= dx * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Right)
             {
-                float dx = (x2 - x1) / (float)Width;
+                float dx = (x2 - x1) / (float)Width * 1.777f;
                 x2 += dx * 5f;
                 x1 += dx * 5f;
                 Draw();
@@ -59,7 +63,7 @@ namespace Fractal
             }
             if (e.Key == System.Windows.Input.Key.E)
             {
-                float dx = (x2 - x1) / (float)Width * 1.777f; 
+                float dx = (x2 - x1) / (float)Width * 1.777f;
                 float dy = (y2 - y1) / (float)Height;
                 x1 += dx * 5f;
                 y1 += dy * 5f;
@@ -78,7 +82,7 @@ namespace Fractal
                 Draw();
             }
         }
-
+        
         private void Draw()
         {
             Memory<ImageSharpBgra32> pixelMemory = new Memory<ImageSharpBgra32>(new ImageSharpBgra32[(int)Width * (int)Height]);
@@ -88,11 +92,11 @@ namespace Fractal
             using ReadWriteTexture2D<Bgra32, float4> texture = GraphicsDevice.GetDefault().AllocateReadWriteTexture2D<Bgra32, float4>(span, (int)Width, (int)Height);
 
             // Run our shader on the texture we just loaded
-            GraphicsDevice.GetDefault().For(texture.Width, texture.Height, new DrawMandelbrotSet(texture, x1, x2, y1, y2));
+            GraphicsDevice.GetDefault().For(texture.Width, texture.Height, new DrawMandelbrotSet(texture, x1, x2, y1, y2, maxIterations));
             texture.CopyTo(span);
 
             byte[] pixelData = MemoryMarshal.AsBytes(span).ToArray();
-            img.Source = new WriteableBitmap((int)Width, (int)Height, 96, 96, PixelFormats.Bgr32, null).FromByteArray(pixelData);
+            img.Source = _wb.FromByteArray(pixelData);
         }
     }
 }

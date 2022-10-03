@@ -5,6 +5,7 @@ public readonly partial struct DrawMandelbrotSet : IComputeShader
 {
     public readonly IReadWriteNormalizedTexture2D<float4> texture;
     public readonly float x1, x2, y1, y2;
+    public readonly int maxIterations;
 
     public void Execute()
     {
@@ -24,9 +25,9 @@ public readonly partial struct DrawMandelbrotSet : IComputeShader
 
             if (z_real2 * z_real2 + z_imaginary2 * z_imaginary2 > 4.0f)
             {
-                texture[ThreadIds.XY].R = 0f + (float)iterations / 1000 * 1.5f;
-                texture[ThreadIds.XY].G = 0f + (float)iterations / 1000 * 2f;
-                texture[ThreadIds.XY].B = 0f + (float)iterations / 1000 * 4f;
+                texture[ThreadIds.XY].R = 0f + (float)iterations / maxIterations * 10 * 1.5f;
+                texture[ThreadIds.XY].G = 0f + (float)iterations / maxIterations * 10 * 2f;
+                texture[ThreadIds.XY].B = 0f + (float)iterations / maxIterations * 10 * 4f;
                 break;
             }
             if (iterations < 2)
@@ -39,6 +40,6 @@ public readonly partial struct DrawMandelbrotSet : IComputeShader
             }
             z_real = z_real2;
             z_imaginary = z_imaginary2;
-        } while (iterations < 10000);
+        } while (iterations < maxIterations);
     }
 }
