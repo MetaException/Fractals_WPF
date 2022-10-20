@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ComputeSharp;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ComputeSharp;
 using ImageSharpBgra32 = SixLabors.ImageSharp.PixelFormats.Bgra32;
 
 namespace Fractal
@@ -13,14 +13,18 @@ namespace Fractal
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
         }
 
         //public float x1 = -0.5555998601048486f, x2 = -0.5418662845040672f, y1 = -0.49153696023859084f, y2 = -0.5052705358393723f;
-        public float x1 = -3.5f, x2 = 0.5f, y1 = -2f, y2 = 2f;
+
+        //public float x1 = -3.5f, x2 = 0.5f, y1 = -2f, y2 = 2f;
+
+        private float2 bottomLeft = new float2(-3.5f, -2f);
+        private float2 topRight = new float2(0.5f, 2f);
+
         public int maxIterations = 10000;
 
         private WriteableBitmap _wb;
@@ -35,54 +39,54 @@ namespace Fractal
         {
             if (e.Key == System.Windows.Input.Key.Left)
             {
-                float dx = (x2 - x1) / (float)Width * 1.777f;
-                x2 -= dx * 5f;
-                x1 -= dx * 5f;
+                float dx = (topRight.X - bottomLeft.X) / (float)Width * 1.777f;
+                topRight.X -= dx * 5f;
+                bottomLeft.X -= dx * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Right)
             {
-                float dx = (x2 - x1) / (float)Width * 1.777f;
-                x2 += dx * 5f;
-                x1 += dx * 5f;
+                float dx = (topRight.X - bottomLeft.X) / (float)Width * 1.777f;
+                topRight.X += dx * 5f;
+                bottomLeft.X += dx * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Up)
             {
-                float dy = (y2 - y1) / (float)Height;
-                y2 -= dy * 5f;
-                y1 -= dy * 5f;
+                float dy = (topRight.Y - bottomLeft.Y) / (float)Height;
+                topRight.Y -= dy * 5f;
+                bottomLeft.Y -= dy * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Down)
             {
-                float dy = (y2 - y1) / (float)Height;
-                y2 += dy * 5f;
-                y1 += dy * 5f;
+                float dy = (topRight.Y - bottomLeft.Y) / (float)Height;
+                topRight.Y += dy * 5f;
+                bottomLeft.Y += dy * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.E)
             {
-                float dx = (x2 - x1) / (float)Width * 1.777f;
-                float dy = (y2 - y1) / (float)Height;
-                x1 += dx * 5f;
-                y1 += dy * 5f;
-                x2 -= dx * 5f;
-                y2 -= dy * 5f;
+                float dx = (topRight.X - bottomLeft.X) / (float)Width * 1.777f;
+                float dy = (topRight.Y - bottomLeft.Y) / (float)Height;
+                bottomLeft.X += dx * 5f;
+                bottomLeft.Y += dy * 5f;
+                topRight.X -= dx * 5f;
+                topRight.Y -= dy * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Q)
             {
-                float dx = (x2 - x1) / (float)Width * 1.777f;
-                float dy = (y2 - y1) / (float)Height;
-                x1 -= dx * 5f;
-                y1 -= dy * 5f;
-                x2 += dx * 5f;
-                y2 += dy * 5f;
+                float dx = (topRight.X - bottomLeft.X) / (float)Width * 1.777f;
+                float dy = (topRight.Y - bottomLeft.Y) / (float)Height;
+                bottomLeft.X -= dx * 5f;
+                bottomLeft.Y -= dy * 5f;
+                topRight.X += dx * 5f;
+                topRight.Y += dy * 5f;
                 Draw();
             }
         }
-        
+
         private void Draw()
         {
             Memory<ImageSharpBgra32> pixelMemory = new Memory<ImageSharpBgra32>(new ImageSharpBgra32[(int)Width * (int)Height]);
@@ -92,7 +96,7 @@ namespace Fractal
             using ReadWriteTexture2D<Bgra32, float4> texture = GraphicsDevice.GetDefault().AllocateReadWriteTexture2D<Bgra32, float4>(span, (int)Width, (int)Height);
 
             // Run our shader on the texture we just loaded
-            GraphicsDevice.GetDefault().For(texture.Width, texture.Height, new DrawMandelbrotSet(texture, x1, x2, y1, y2, maxIterations));
+            GraphicsDevice.GetDefault().For(texture.Width, texture.Height, new DrawMandelbrotSet(texture, bottomLeft, topRight, maxIterations));
             texture.CopyTo(span);
 
             byte[] pixelData = MemoryMarshal.AsBytes(span).ToArray();
