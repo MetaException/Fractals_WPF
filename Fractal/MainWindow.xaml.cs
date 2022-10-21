@@ -18,12 +18,11 @@ namespace Fractal
             InitializeComponent();
         }
 
-        //public float x1 = -0.5555998601048486f, x2 = -0.5418662845040672f, y1 = -0.49153696023859084f, y2 = -0.5052705358393723f;
+        private Complex bottomLeft = Complex.FromValue(-0.5555998601048486f, -0.49153696023859084f);
+        private Complex topRight = Complex.FromValue(-0.5418662845040672f, -0.5052705358393723f);
 
-        //public float x1 = -3.5f, x2 = 0.5f, y1 = -2f, y2 = 2f;
-
-        private float2 bottomLeft = new float2(-3.5f, -2f);
-        private float2 topRight = new float2(0.5f, 2f);
+        //private Complex bottomLeft = Complex.FromValue(-3.5f, -2f);
+        //private Complex topRight = Complex.FromValue(0.5f, 2f);
 
         public int maxIterations = 10000;
 
@@ -39,50 +38,50 @@ namespace Fractal
         {
             if (e.Key == System.Windows.Input.Key.Left)
             {
-                float dx = (topRight.X - bottomLeft.X) / (float)Width * 1.777f;
-                topRight.X -= dx * 5f;
-                bottomLeft.X -= dx * 5f;
+                float dx = (topRight.Real - bottomLeft.Real) / (float)Width * 1.777f;
+                topRight.Real -= dx * 5f;
+                bottomLeft.Real -= dx * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Right)
             {
-                float dx = (topRight.X - bottomLeft.X) / (float)Width * 1.777f;
-                topRight.X += dx * 5f;
-                bottomLeft.X += dx * 5f;
+                float dx = (topRight.Real - bottomLeft.Real) / (float)Width * 1.777f;
+                topRight.Real += dx * 5f;
+                bottomLeft.Real += dx * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Up)
             {
-                float dy = (topRight.Y - bottomLeft.Y) / (float)Height;
-                topRight.Y -= dy * 5f;
-                bottomLeft.Y -= dy * 5f;
+                float dy = (topRight.Imaginary - bottomLeft.Imaginary) / (float)Height;
+                topRight.Imaginary -= dy * 5f;
+                bottomLeft.Imaginary -= dy * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Down)
             {
-                float dy = (topRight.Y - bottomLeft.Y) / (float)Height;
-                topRight.Y += dy * 5f;
-                bottomLeft.Y += dy * 5f;
+                float dy = (topRight.Imaginary - bottomLeft.Imaginary) / (float)Height;
+                topRight.Imaginary += dy * 5f;
+                bottomLeft.Imaginary += dy * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.E)
             {
-                float dx = (topRight.X - bottomLeft.X) / (float)Width * 1.777f;
-                float dy = (topRight.Y - bottomLeft.Y) / (float)Height;
-                bottomLeft.X += dx * 5f;
-                bottomLeft.Y += dy * 5f;
-                topRight.X -= dx * 5f;
-                topRight.Y -= dy * 5f;
+                float dx = (topRight.Real - bottomLeft.Real) / (float)Width * 1.777f;
+                float dy = (topRight.Imaginary - bottomLeft.Imaginary) / (float)Height;
+                bottomLeft.Real += dx * 5f;
+                bottomLeft.Imaginary += dy * 5f;
+                topRight.Real -= dx * 5f;
+                topRight.Imaginary -= dy * 5f;
                 Draw();
             }
             if (e.Key == System.Windows.Input.Key.Q)
             {
-                float dx = (topRight.X - bottomLeft.X) / (float)Width * 1.777f;
-                float dy = (topRight.Y - bottomLeft.Y) / (float)Height;
-                bottomLeft.X -= dx * 5f;
-                bottomLeft.Y -= dy * 5f;
-                topRight.X += dx * 5f;
-                topRight.Y += dy * 5f;
+                float dx = (topRight.Real - bottomLeft.Real) / (float)Width * 1.777f;
+                float dy = (topRight.Imaginary - bottomLeft.Imaginary) / (float)Height;
+                bottomLeft.Real -= dx * 5f;
+                bottomLeft.Imaginary -= dy * 5f;
+                topRight.Real += dx * 5f;
+                topRight.Imaginary += dy * 5f;
                 Draw();
             }
         }
